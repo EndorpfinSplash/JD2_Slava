@@ -18,7 +18,10 @@ public class UserDaoUtil {
     private UserDao userDao;
 
     public void testOperations() {
-        userDao.save(new User(100L, "test", "test", new Timestamp(new Date().getTime()), 1L));
+        userDao.save(
+                new User(100L, "test", "test",
+                        new Timestamp(new Date().getTime()), 1L, "qweqwe", "qweqwe")
+        );
 
         User second = userDao.findById(2L);
         second.setUserSurname("testTransaction");

@@ -13,15 +13,20 @@ public class User {
     private Timestamp birthDate;
     private Long departmentId;
 
+    private String login;
+    private String password;
+
     public User() {
     }
 
-    public User(Long userId, String userName, String userSurname, Timestamp birthDate, Long departmentId) {
+    public User(Long userId, String userName, String userSurname, Timestamp birthDate, Long departmentId, String login, String password) {
         this.userId = userId;
         this.userName = userName;
         this.userSurname = userSurname;
         this.birthDate = birthDate;
         this.departmentId = departmentId;
+        this.login = login;
+        this.password = password;
     }
 
     public Long getUserId() {
@@ -64,6 +69,22 @@ public class User {
         this.departmentId = departmentId;
     }
 
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -73,12 +94,14 @@ public class User {
                 Objects.equals(userName, user.userName) &&
                 Objects.equals(userSurname, user.userSurname) &&
                 Objects.equals(birthDate, user.birthDate) &&
-                Objects.equals(departmentId, user.departmentId);
+                Objects.equals(departmentId, user.departmentId) &&
+                Objects.equals(login, user.login) &&
+                Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, userName, userSurname, birthDate, departmentId);
+        return Objects.hash(userId, userName, userSurname, birthDate, departmentId, login, password);
     }
 
     @Override

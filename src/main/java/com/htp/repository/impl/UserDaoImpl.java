@@ -31,8 +31,12 @@ public class UserDaoImpl implements UserDao {
     public static final String USER_SURNAME = "user_surname";
     public static final String BIRTH_DATE = "birth_date";
     public static final String DEP_ID = "dep_id";
+    public static final String LOGIN = "login";
+    public static final String PASSWORD = "password";
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -44,6 +48,8 @@ public class UserDaoImpl implements UserDao {
         user.setUserSurname(resultSet.getString(USER_SURNAME));
         user.setBirthDate(resultSet.getTimestamp(BIRTH_DATE));
         user.setDepartmentId(resultSet.getLong(DEP_ID));
+        user.setLogin(resultSet.getString(LOGIN));
+        user.setPassword(resultSet.getString(PASSWORD));
         return user;
     }
 
@@ -79,8 +85,8 @@ public class UserDaoImpl implements UserDao {
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.DEFAULT)
     public User save(User entity) {
-        final String createQuery = "INSERT INTO user (user_name, user_surname, birth_date, dep_id) " +
-                "VALUES (:userName, :userSurname, :birthDate, :depId);";
+        final String createQuery = "INSERT INTO user (user_name, user_surname, birth_date, dep_id, login, password) " +
+                "VALUES (:userName, :userSurname, :birthDate, :depId, :login, :pass);";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -89,6 +95,8 @@ public class UserDaoImpl implements UserDao {
         params.addValue("userSurname", entity.getUserSurname());
         params.addValue("birthDate", entity.getBirthDate());
         params.addValue("depId", entity.getDepartmentId());
+        params.addValue("login", entity.getLogin());
+        params.addValue("pass", entity.getPassword());
 
         namedParameterJdbcTemplate.update(createQuery, params, keyHolder);
 
@@ -100,13 +108,16 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User update(User entity) {
         final String createQuery = "UPDATE user set user_name = :userName, user_surname = :userSurname, " +
-                "birth_date = :birthDate, dep_id = :depId where user_id = :userId";
+                "birth_date = :birthDate, dep_id = :depId, login = :login, password = :pass where user_id = :userId";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userName", entity.getUserName());
         params.addValue("userSurname", entity.getUserSurname());
         params.addValue("birthDate", entity.getBirthDate());
         params.addValue("depId", entity.getDepartmentId());
+        params.addValue("login", entity.getLogin());
+        params.addValue("pass", entity.getPassword());
+
         params.addValue("userId", entity.getUserId());
 
         namedParameterJdbcTemplate.update(createQuery, params);
@@ -114,10 +125,20 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public User findByLogin(String login) {
+        final String findById = "select * from user where login = :login";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("login", login);
+
+        return namedParameterJdbcTemplate.queryForObject(findById, params, this::getUserRowMapper);
+    }
+
+    @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public List<Long> batchUpdate(List<User> users) {
         final String createQuery = "UPDATE user set user_name = :userName, user_surname = :userSurname, " +
-                "birth_date = :birthDate, dep_id = :depId where user_id = :userId";
+                "birth_date = :birthDate, dep_id = :depId, login = :login, password = :pass where user_id = :userId";
 
         List<SqlParameterSource> batch = new ArrayList<>();
         for (User user : users) {
@@ -126,6 +147,9 @@ public class UserDaoImpl implements UserDao {
             params.addValue("userSurname", user.getUserSurname());
             params.addValue("birthDate", user.getBirthDate());
             params.addValue("depId", user.getDepartmentId());
+            params.addValue("login", user.getLogin());
+            params.addValue("pass", user.getPassword());
+
             params.addValue("userId", user.getUserId());
             batch.add(params);
         }
@@ -135,12 +159,14 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> search(String query) {
+    public List<User> search(String query, Integer limit, Integer offset) {
         final String searchQuery = "select * from user where lower(user_name) LIKE lower(:query) or " +
-                "lower(user_surname) LIKE lower(:query)";
+                "lower(user_surname) LIKE lower(:query) limit :lim offset :off";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("query", "%" + query + "%");
+        params.addValue("lim", limit);
+        params.addValue("off", offset);
 
         return namedParameterJdbcTemplate.query(searchQuery, params, this::getUserRowMapper);
     }

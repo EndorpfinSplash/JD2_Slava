@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
+@RequestMapping(value = "/api")
 public class HelloController {
 
     @Autowired
@@ -24,6 +26,7 @@ public class HelloController {
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public String printHello(ModelMap model) {
+
         model.addAttribute("message", "Hello Spring MVC Framework!");
         return "hello";
     }
@@ -31,7 +34,7 @@ public class HelloController {
     @RequestMapping(value = "/user/search", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public String printHello(@RequestParam("query") String query, ModelMap model) {
-        List<User> search = userDao.search(query);
+        List<User> search = userDao.search(query, 10, 0);
         model.addAttribute("userName",
                 StringUtils.join(search.stream().map(User::getUserName).collect(Collectors.toList()), ","));
         return "hello";
