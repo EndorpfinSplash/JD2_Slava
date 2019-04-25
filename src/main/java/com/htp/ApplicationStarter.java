@@ -5,6 +5,7 @@ import com.htp.config.core.JdbcTemplateConfig;
 import com.htp.config.swagger.SwaggerConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -15,7 +16,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @EnableAspectJAutoProxy
 @EnableTransactionManagement(proxyTargetClass = true)
-@SpringBootApplication(scanBasePackages = {"com.htp"})
+@SpringBootApplication(scanBasePackages = {"com.htp"}, exclude = JacksonAutoConfiguration.class)
 @Import({
         DatabaseConfig.class,
         JdbcTemplateConfig.class,
