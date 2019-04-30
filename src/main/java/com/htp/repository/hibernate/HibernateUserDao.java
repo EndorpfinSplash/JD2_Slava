@@ -6,7 +6,9 @@ import com.htp.domain.hibernate.TestUser;
 import com.htp.repository.UserDao;
 import org.aspectj.weaver.ast.Test;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
@@ -16,9 +18,14 @@ import java.util.List;
 @Repository
 @Qualifier("hibernateUserDao")
 public class HibernateUserDao implements HibernateUser {
+
+    @Autowired
+    @Qualifier("sessionFactory")
+    private SessionFactory sessionFactory;
+
     @Override
     public List<TestUser> findAll() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             return session.createQuery("select tu from TestUser tu", TestUser.class).list();
         }
     }
@@ -35,22 +42,7 @@ public class HibernateUserDao implements HibernateUser {
 
     @Override
     public TestUser save(TestUser entity) {
-        Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            // start a transaction
-            transaction = session.beginTransaction();
-            // save the student object
-            session.save(entity);
-            // commit transaction
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-
-        return entity;
+        return null;
     }
 
     @Override
