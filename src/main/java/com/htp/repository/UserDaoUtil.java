@@ -2,6 +2,7 @@ package com.htp.repository;
 
 import com.htp.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import java.util.Date;
 public class UserDaoUtil {
 
     @Autowired
+    @Qualifier("userDaoImpl")
     private UserDao userDao;
 
     public void testOperations() {

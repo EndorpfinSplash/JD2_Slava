@@ -4,6 +4,7 @@ import com.htp.domain.User;
 import com.htp.repository.UserDao;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class HelloController {
 
     @Autowired
+    @Qualifier("userDaoImpl")
     private UserDao userDao;
 
     @RequestMapping(value = "/hello", method = RequestMethod.GET)

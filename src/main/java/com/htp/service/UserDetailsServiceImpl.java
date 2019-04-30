@@ -5,6 +5,7 @@ import com.htp.domain.User;
 import com.htp.repository.RoleDao;
 import com.htp.repository.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +19,7 @@ import java.util.regex.Pattern;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
+    @Qualifier("userDaoImpl")
     private UserDao userDao;
 
     @Autowired

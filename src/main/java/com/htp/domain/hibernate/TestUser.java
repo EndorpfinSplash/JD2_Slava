@@ -1,4 +1,5 @@
-package com.htp.domain;
+package com.htp.domain.hibernate;
+
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -8,39 +9,42 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-public class User {
+@Entity
+@Table(name = "test_user")
+public class TestUser {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
     private Long userId;
 
+    @Column(name = "user_name")
     private String userName;
 
+    @Column(name = "user_surname")
     private String userSurname;
 
+    @Column(name = "birth_date")
     private Timestamp birthDate;
 
-    private String login;
-
-    private String password;
-
-//    @ManyToOne(name = "dep_id")
-    private Long departmentId;
-
-    public User() {
+    public TestUser() {
     }
 
-    public User(Long userId, String userName, String userSurname, Timestamp birthDate, Long departmentId, String login, String password) {
+    public TestUser(String userName, String userSurname, Timestamp birthDate) {
+        this.userName = userName;
+        this.userSurname = userSurname;
+        this.birthDate = birthDate;
+    }
+
+    public TestUser(Long userId, String userName, String userSurname, Timestamp birthDate) {
         this.userId = userId;
         this.userName = userName;
         this.userSurname = userSurname;
         this.birthDate = birthDate;
-        this.departmentId = departmentId;
-        this.login = login;
-        this.password = password;
     }
 
     public Long getUserId() {
@@ -75,47 +79,20 @@ public class User {
         this.birthDate = birthDate;
     }
 
-    public Long getDepartmentId() {
-        return departmentId;
-    }
-
-    public void setDepartmentId(Long departmentId) {
-        this.departmentId = departmentId;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(userId, user.userId) &&
-                Objects.equals(userName, user.userName) &&
-                Objects.equals(userSurname, user.userSurname) &&
-                Objects.equals(birthDate, user.birthDate) &&
-                Objects.equals(departmentId, user.departmentId) &&
-                Objects.equals(login, user.login) &&
-                Objects.equals(password, user.password);
+        TestUser testUser = (TestUser) o;
+        return Objects.equals(userId, testUser.userId) &&
+                Objects.equals(userName, testUser.userName) &&
+                Objects.equals(userSurname, testUser.userSurname) &&
+                Objects.equals(birthDate, testUser.birthDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, userName, userSurname, birthDate, departmentId, login, password);
+        return Objects.hash(userId, userName, userSurname, birthDate);
     }
 
     @Override

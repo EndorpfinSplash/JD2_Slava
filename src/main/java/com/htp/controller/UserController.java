@@ -4,8 +4,10 @@ import com.htp.controller.requests.SearchCriteria;
 import com.htp.controller.requests.UserCreateRequest;
 import com.htp.domain.Role;
 import com.htp.domain.User;
+import com.htp.domain.hibernate.TestUser;
 import com.htp.repository.RoleDao;
 import com.htp.repository.UserDao;
+import com.htp.repository.hibernate.HibernateUserDao;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +15,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,13 +38,25 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping(value = "/rest/users")
 public class UserController {
+
     @Autowired
+    @Qualifier("userDaoImpl")
     private UserDao userDao;
+
+    @Autowired
+    @Qualifier("hibernateUserDao")
+    private HibernateUserDao hibernateUserDao;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<User>> getUsers() {
         return new ResponseEntity<>(userDao.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<TestUser>> getUsersHibernate() {
+        return new ResponseEntity<>(hibernateUserDao.findAll(), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Get user from server by id")
