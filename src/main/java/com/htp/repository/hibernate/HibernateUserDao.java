@@ -32,7 +32,9 @@ public class HibernateUserDao implements HibernateUser {
 
     @Override
     public TestUser findById(Long id) {
-        return null;
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("select tu from TestUser tu where tu.userId =:id", TestUser.class).uniqueResult();
+        }
     }
 
     @Override

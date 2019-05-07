@@ -1,4 +1,4 @@
-package org.o7planning.sbhibernate;
+package com.htp;
 
 import com.htp.config.core.DatabaseConfig;
 import com.htp.config.core.JdbcTemplateConfig;
